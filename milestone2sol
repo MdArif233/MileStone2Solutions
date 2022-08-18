@@ -1,0 +1,1277 @@
+**********************************START*********************************************
+
+Question 1  (Spring IOC)
+
+1.1) XML-based configuration
+
+//Program
+
+package com.godigit.XmlConfiguration;
+
+public class Features {
+
+	private String refreshRate;
+	private int iemiNumber;
+	private String brand;
+	
+	public Features(String refreshRate, int iemiNumber, String brand) {
+		
+		this.refreshRate = refreshRate;
+		this.iemiNumber = iemiNumber;
+		this.brand = brand;
+	}
+		
+	public Features() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public String toString() {
+		return "Features [refreshRate=" + refreshRate + ", iemiNumber=" + iemiNumber + ", brand=" + brand + "]";
+	}
+}
+
+package com.godigit.XmlConfiguration;
+
+public class Mobile {
+    
+	private int buildNumber;
+	private String name;
+	private Features features;
+
+	public int getBuildNumber() {
+		return buildNumber;
+	}
+	public void setBuildNumber(int buildNumber) {
+		this.buildNumber = buildNumber;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public Features getFeatures() {
+		return features;
+	}
+	public void setFeatures(Features features) {
+		this.features = features;
+	}
+	@Override
+	public String toString() {
+		return "Mobile [buildNumber=" + buildNumber + ", name=" + name + ", features=" + features + "]";
+	}
+		
+}
+
+package com.godigit.XmlConfiguration;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class Test {
+
+  public static void main(String[] args) {
+	
+	  //using application context
+	  ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+	  
+	  //changing the bean received to the object of the class Mobile
+	  
+	  Mobile mob = (Mobile) context.getBean("mobile");
+	  
+	  
+	  System.out.println("Theis is the example of the XML based Configuration using xml file");
+	  
+	  System.out.println(mob.toString());  //calling the tostring method of mobile clas 
+}	
+  
+}
+
+//beans.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    
+    
+    
+    <bean id ="feat" class ="com.godigit.XmlConfiguration.Features">
+    <constructor-arg value ="90HZ"></constructor-arg>
+    <constructor-arg value ="86863204"></constructor-arg>
+    <constructor-arg value ="Vivo"></constructor-arg>
+    </bean>
+    
+    <bean id ="mobile" class="com.godigit.XmlConfiguration.Mobile">
+    <property name="buildNumber" value="109902"></property>
+    <property name="name" value ="IQOO Z6 Pro"></property>
+    <property name="features" ref="feat"></property>    
+    </bean>
+    </beans>
+
+//Output
+
+Theis is the example of the XML based Configuration using xml file
+Mobile [buildNumber=109902, name=IQOO Z6 Pro, features=Features [refreshRate=90HZ, iemiNumber=86863204, brand=Vivo]]
+
+***************************************************************************************************************
+
+1.2)    Annotation-based configuration
+
+//Program
+
+package com.godigit.AnnotationConfiguration;
+
+public class Facility {
+
+	private String shareType;
+	private int  noOfBeds;
+	private int rent;
+	public String getShareType() {
+		return shareType;
+	}
+	public void setShareType(String shareType) {
+		this.shareType = shareType;
+	}
+	public int getNoOfBeds() {
+		return noOfBeds;
+	}
+	public void setNoOfBeds(int noOfBeds) {
+		this.noOfBeds = noOfBeds;
+	}
+	public int getRent() {
+		return rent;
+	}
+	public void setRent(int rent) {
+		this.rent = rent;
+	}
+	@Override
+	public String toString() {
+		return "Facility [shareType=" + shareType + ", noOfBeds=" + noOfBeds + ", rent=" + rent + "]";
+	}	
+}
+
+
+
+package com.godigit.AnnotationConfiguration;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
+public class Room {
+
+	
+	private int roomNo;
+	private String roomType;
+	@Autowired
+	@Qualifier("faci")
+	private Facility facility;
+	
+	
+	public int getRoomNo() {
+		return roomNo;
+	}
+	public void setRoomNo(int roomNo) {
+		this.roomNo = roomNo;
+	}
+	public String getRoomType() {
+		return roomType;
+	}
+	public void setRoomType(String roomType) {
+		this.roomType = roomType;
+	}
+	public Facility getFacility() {
+		return facility;
+	}
+	public void setFacility(Facility facility) {
+		this.facility = facility;
+	}
+	@Override
+	public String toString() {
+		return "Room [roomNo=" + roomNo + ", roomType=" + roomType + ", facility=" + facility + "]";
+	}
+	
+	
+}
+
+
+package com.godigit.AnnotationConfiguration;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class Test {
+  
+	public static void main(String[] args) {
+		
+		//using the applicationcontext
+		
+       ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+       
+       //typecasting the bean received to the object of the class
+       
+       Room roomDetails = (Room)context.getBean("room");
+       
+       //printing the information recieved
+       
+       System.out.println("This is the configuration using annotation ");
+       
+       System.out.println(roomDetails.toString());
+       
+	}
+}
+
+//beans.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+     http://www.springframework.org/schema/context/spring-context.xsd">
+     
+     
+    <context:annotation-config></context:annotation-config>
+    
+    <bean id ="faci" class ="com.godigit.AnnotationConfiguration.Facility">
+    <property name="shareType" value ="6 sharing"></property>
+    <property name="noOfBeds" value ="8"></property>
+    <property name="rent" value ="72000"></property>
+    </bean>
+    
+       
+    <bean id ="temp" class ="com.godigit.AnnotationConfiguration.Facility">
+    <property name="shareType" value ="2 sharing"></property>
+    <property name="noOfBeds" value ="2"></property>
+    <property name="rent" value ="12000"></property>
+    </bean>
+    
+    
+    <bean id ="room" class="com.godigit.AnnotationConfiguration.Room">
+      <property name="roomNo" value="205"></property>
+      <property name="roomType" value ="2BHK"></property>
+      
+    </bean>
+    </beans>
+
+//Output
+
+This is the configuration using annotation 
+Room [roomNo=205, roomType=2BHK, facility=Facility [shareType=6 sharing, noOfBeds=8, rent=72000]]
+
+******************************************************************************************************
+
+
+1.3)  Java-based configuration
+
+//Program
+
+package com.godigit.removeXML;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
+
+@Component
+public class College {
+
+
+ public void showCollegeInformation() {
+		System.out.println("This is the best college i have ever studied in ");
+	}
+}
+
+
+package com.godigit.removeXML;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+
+//using the @configuration to use this as configuration file
+@Configuration
+
+@ComponentScan(basePackages ="com.godigit.removeXML" ) //using componentScan fot scanning the base package 
+
+public class CollegeConfig {
+
+    	
+}
+
+
+package com.godigit.removeXML;
+
+import org.springframework.context.ApplicationContext;
+//import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+public class Test {
+
+	public static void main(String[] args) {
+		
+	
+	ApplicationContext context = new AnnotationConfigApplicationContext(CollegeConfig.class);
+	
+	//i am using Annotationconfig as we are doing java based Configuration
+	
+       College college1 = (College)context.getBean("college");
+       
+       System.out.println("This is configutaion using java based configuration");
+       
+       college1.showCollegeInformation();
+	}		  
+		
+}
+
+
+//Output
+This is configutaion using java based configuration
+This is the best college i have ever studied in 
+
+
+**********************************************************************************************
+
+
+
+
+********************$$$$$$$$$$$$$$$$$$$************************************************
+Question 2.(Spring DI)
+
+2.1) Constructor based Dependency Injection
+
+//program
+
+package com.godigit.ConstructorInjection;
+
+public class Doctor {
+
+	private int id;
+	private String name;
+	private String specialist;
+	private int workinghours;
+	
+	//gnerated the constructor to set the values
+	public Doctor(int id, String name, String specialist, int workinghours) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.specialist = specialist;
+		this.workinghours = workinghours;
+	}
+	
+	public Doctor() {
+		super();
+		
+	}
+	@Override
+	public String toString() {
+		return "Doctor [id=" + id + ", name=" + name + ", specialist=" + specialist + ", workinghours=" + workinghours
+				+ "]";
+	}
+	
+}
+
+package com.godigit.ConstructorInjection;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class Test {
+
+	public static void main(String[] args) {
+		
+		//using the application context 
+		ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+		
+		//typecasting the bean received into the class object 
+		Doctor doc= (Doctor) context.getBean("doct");
+		
+		System.out.println("These are the details of the Doctor using constructor injection :");
+		
+		System.out.println(doc.toString());
+		
+	}
+}
+
+
+beans.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    
+    <bean id ="doct"  class ="com.godigit.ConstructorInjection.Doctor">
+    <constructor-arg value="101"></constructor-arg>
+    <constructor-arg value="Suman Maurya"></constructor-arg>
+    <constructor-arg value="Surgon"></constructor-arg>
+    <constructor-arg value ="7"></constructor-arg>
+    </bean>
+    </beans>
+
+
+//Output
+
+These are the details of the Doctor using constructor injection :
+Doctor [id=101, name=Suman Maurya, specialist=Surgon, workinghours=7]
+
+**************************************************************************************
+
+2.2)  Setter based Dependency Injection
+
+package com.godigit.SetterInjection;
+
+public class NoteBookStore {
+
+	private String name;
+	private int price;
+	private String subject;
+	private String edition;
+	
+
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public int getPrice() {
+		return price;
+	}
+	public void setPrice(int price) {
+		this.price = price;
+	}
+	public String getSubject() {
+		return subject;
+	}
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+	@Override
+	public String toString() {
+		return "NoteBookStore [name=" + name + ", price=" + price + ", subject=" + subject + ", edition=" + edition
+				+ "]";
+	}
+	public String getEdition() {
+		return edition;
+	}
+	public void setEdition(String edition) {
+		this.edition = edition;
+	}	
+}
+
+
+package com.godigit.SetterInjection;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class Test {
+
+public static void main(String[] args) {
+	
+	//using the applicationcontext 
+	
+	ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");  
+	
+	NoteBookStore book = (NoteBookStore) context.getBean("obj");  //typecasting into the NoteBookClass Object;
+	
+	System.out.println("The details of the notebookstore are injected through setter injection as ::");
+	
+	
+	System.out.println(book.toString());  //printing the information;
+  }
+}
+
+
+//beans.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    
+    <bean id ="obj"  class ="com.godigit.SetterInjection.NoteBookStore">
+    <property name="name"  value ="S.Chand"></property>
+    <property name="price" value ="476"></property>
+    <property name="subject"  value ="Physics"></property>
+    <property name="edition"  value ="3rd"></property>
+    </bean>
+    </beans>
+
+
+//Output
+
+The details of the notebookstore are injected through setter injection as ::
+NoteBookStore [name=S.Chand, price=476, subject=Physics, edition=3rd]
+
+********************************************************************************************
+
+
+
+2.3) Field or Property-based Dependency Injection
+
+package com.godigit.PropertyOrFieldInjection;
+
+public class Address {
+
+	private int streetNo;
+	private String colony;
+	private String schooltype;
+	
+	public int getStreetNo() {
+		return streetNo;
+	}
+	public void setStreetNo(int streetNo) {
+		this.streetNo = streetNo;
+	}
+	public String getColony() {
+		return colony;
+	}
+	public void setColony(String colony) {
+		this.colony = colony;
+	}
+	public String getSchooltype() {
+		return schooltype;
+	}
+	public void setSchooltype(String schooltype) {
+		this.schooltype = schooltype;
+	}
+	@Override
+	public String toString() {
+		return "Address [streetNo=" + streetNo + ", colony=" + colony + ", schooltype=" + schooltype + "]";
+	}	
+}
+
+
+package com.godigit.PropertyOrFieldInjection;
+
+public class School {
+
+	private int schoolId;
+	private String schoolname;
+	private Address address;
+	
+	public int getSchoolId() {
+		return schoolId;
+	}
+	public void setSchoolId(int schoolId) {
+		this.schoolId = schoolId;
+	}
+	public String getSchoolname() {
+		return schoolname;
+	}
+	public void setSchoolname(String schoolname) {
+		this.schoolname = schoolname;
+	}
+	public Address getAddress() {
+		return address;
+	}
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+	@Override
+	public String toString() {
+		return "School [schoolId=" + schoolId + ", schoolname=" + schoolname + ", address=" + address + "]";
+	}
+	
+	
+}
+
+
+package com.godigit.PropertyOrFieldInjection;
+
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+public class Test {
+
+	public static void main(String[] args) {
+		
+		//using the applicationcontext 
+		ApplicationContext context = new ClassPathXmlApplicationContext("beans.xml");
+		
+		//typecasting the obtained bean into the class object
+		School sc= (School)context.getBean("school");
+		
+		System.out.println("Values are injected throgh property or Field Injection");
+		System.out.println(sc.toString());
+		
+	}
+	
+}
+
+//beans.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    
+    <bean id ="add" class ="com.godigit.PropertyOrFieldInjection.Address">
+    <property name="streetNo" value ="3"></property>
+    <property name="colony" value="Sri Rama Colony"></property>
+    <property name="schooltype" value ="Convent"></property>
+    
+    </bean>
+  
+    <bean id ="school"  class ="com.godigit.PropertyOrFieldInjection.School">
+    <property name="schoolId" value ="1013"></property>
+     <property name="schoolname" value ="Ascent Convent School"></property>
+      <property name="address" ref ="add"></property>
+       
+    </bean>
+    </beans>
+
+//Output
+
+Values are injected throgh property or Field Injection
+School [schoolId=1013, schoolname=Ascent Convent School, address=Address [streetNo=3, colony=Sri Rama Colony, schooltype=Convent]]
+
+
+******************************************************************************
+
+
+
+
+
+************************$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$************************************************
+Question 3: (Java 8 features)
+
+3.1 Lambda Expressions
+//Program
+
+package com.godigit.JavaFeatures;
+ 
+interface Watchable{  //interface declarations
+	
+	void watch(String movie);  //declaring the abstract method but we can't implement here by the rules;
+}
+public class LambdaExpression {    
+
+	public static void main(String[] args) {
+		
+		Watchable w2  =(movie)->{   //this is the lambda expression with single argument
+			
+			System.out.print("This is the implementation of the lambda expression in  " + movie);
+		};
+		w2.watch("Java");  //calling the watch method of interface;
+		
+	}
+}
+
+//output
+This is the implementation of the lambda expression in  Java
+
+***************************************************************************
+
+3.2 MethodReferances Program
+
+//Program
+
+//1)Referance to the static method
+
+package com.godigit.JavaFeatures;
+
+//Refering to the static method Program;
+
+interface Drivable{  //creating the interface
+	
+	void drive(String vihecle);   //abstract method
+	
+}
+public class MethodReferanceProg {	
+	
+	
+	     //static method defintion 
+	public  static void driving(String vehicle) {
+		
+		System.out.println("You are driving A "+ vehicle);
+		
+	}
+	public static void main(String[] args) {
+		
+		
+		Drivable drii = MethodReferanceProg::driving;    //referring the static method by using ::
+	
+    	drii.drive("Car");  //calling the interface  method;
+	}
+}
+//Output
+You are driving A Car
+
+
+
+2) Referance to the Instance Method Program
+
+//referring to the instance method;
+
+package com.godigit.JavaFeatures;
+
+interface Drivable{  //creating the interface
+	
+	void ride(String vihecle);   //abstract method
+}
+
+public class MethodReferanceProg{
+	
+	//defintion of the instance method;
+	
+	public void riding(String animal) {
+		
+		System.out.println("You are riding on "+animal);
+	}
+	
+	public static void main(String[] args) {
+		
+		//creating the object of the class
+		MethodReferanceProg obj = new MethodReferanceProg();
+		
+		
+		
+		//refering the instance method using referance;
+		Drivable drii = obj::riding;
+		
+		//calling the interface method;
+		drii.ride("Horse");
+		
+		
+		
+	}
+}
+
+//Output
+You are riding on Horse
+
+3) Referring to the Constructor
+
+// refering to the constructor
+
+package com.godigit.JavaFeatures;
+
+interface Printable{    
+	
+	void print();  //abstract method;
+}
+class Printing{
+	
+	Printing(){       //constructor 
+		
+		System.out.println("This is refernce to the Constructor");
+	}
+	
+};
+
+package com.godigit.JavaFeatures;
+
+public class MehtodRefCons {    //main class
+
+	public static void main(String[] args) {
+		
+		Printable prii = Printing::new;  //referring to the constructor 
+		prii.print();  //calling the interface method;
+		
+	}
+}
+
+Output
+
+This is refernce to the Constructor
+
+****************************************************************************
+
+3.3 Functional Interfaces
+
+//program
+
+package com.godigit.JavaFeatures;
+
+interface Workable{   //declaring interface 
+	
+	void work(String course);   //single abstract method
+}
+
+class FunctionalInterfaces  implements Workable{   //implementing the interface 
+	
+	public void work(String course) {   //overriding the abstract method;
+		
+		System.out.println("You are working on Functional Interfaces in  "+ course);
+	}
+	public static void main(String[] args) {
+		
+		FunctionalInterfaces f3 = new FunctionalInterfaces();  //ceating the object of this class
+		
+		f3.work("Python");  //calling the interface method;
+	}
+	
+
+	
+}
+
+
+//Output   
+
+You are working on Functional Interfaces in  Python
+****************************************************************************
+
+3.4 Interface changes: Default and static methods
+
+//program
+
+package com.godigit.JavaFeatures;
+@FunctionalInterface
+interface Playable{
+	
+	
+	
+	default void play(String tool)     //defining the default method in interface
+	
+	{ 
+		System.out.println("You are playing " + tool);
+	}
+	
+	
+	
+	void activity(String  act);  //single abstract method;
+	
+	
+	//static method in interface with body
+	
+	static void sing(String tool) {
+		
+		System.out.println("Now I am Singing "+ tool);
+	}
+	
+}
+public class FunctionalnfStaticDefault  implements Playable{
+
+	//implementing the abstract method of interfce 
+	public void activity(String act) {
+		
+		System.out.println("I am having fun called " + act);
+	}
+	
+	public static void main(String[] args) {
+		
+    FunctionalnfStaticDefault d1 = new FunctionalnfStaticDefault();  //creating the object of this class
+    
+    //calling the default method;
+  
+    d1.play("Guitar");
+    
+    //calling the abstarct method;
+    
+    d1.activity("Playing Cards");
+    
+    //calling the static method
+    Playable.sing("National Anthem");
+	}	
+}
+
+//Output
+
+You are playing Guitar
+I am having fun called Playing Cards
+Now I am Singing National Anthem
+
+
+ 
+****************************************************************************
+3.5 Streams() 
+//Program
+
+package com.godigit.JavaFeatures;
+
+import java.util.ArrayList;  //imported packages
+import java.util.List;  //imported packages
+
+class StreamsProgramHelper{  //creating the helper class for creating the user information
+	
+	 private int id;
+	 private String name;
+	 private int salary;
+	 
+	public StreamsProgramHelper(int id, String name, int salary) {   //using the constructor using fields to set the values
+		
+		this.id = id;
+		this.name = name;
+		this.salary = salary;
+	}
+
+	//using getter and setter methods to set and get the values provided for id name and salary
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getSalary() {
+		return salary;
+	}
+
+	public void setSalary(int salary) {
+		this.salary = salary;
+	}
+	 
+	
+	 
+ }
+public class StreamsProgram {
+
+	public static void main(String[] args) {
+		
+	   List<StreamsProgramHelper> list = new ArrayList<StreamsProgramHelper>();  //creating the list to store the object of StreamsProgramHelper class
+	  
+	   //adding the data by creating the object of the StreamsProgramHelper class and adding them 
+	   //in to the generic type list;
+	   
+	   list.add(new StreamsProgramHelper(101,"Ashu", 80000));
+	   list.add(new StreamsProgramHelper(102,"Ranjan", 10000));
+	   list.add(new StreamsProgramHelper(103,"Aman", 90000));
+	   list.add(new StreamsProgramHelper(104,"Subhash", 70000));
+	   list.add(new StreamsProgramHelper(105,"Shivangi", 40000));
+	   
+	   //Using the .stream() fucntionality to print the data from the stream();
+	   list.stream().forEach(candidate->System.out.println(candidate.getId() + " " + candidate.getName() + " " +  candidate.getSalary()));
+	}
+	
+}
+
+//Output
+
+101 Ashu 80000
+102 Ranjan 10000
+103 Aman 90000
+104 Subhash 70000
+105 Shivangi 40000
+
+***********************************************************************************************
+3.6 Stream Filter Program
+
+//program
+
+package com.godigit.JavaFeatures;
+
+import java.util.ArrayList;
+import java.util.List;
+class StreamFilterHelper{   //naming the class as FilterHelper to make more understading 
+
+     //declaring the varibales with the appropriate datatype
+	 private int id;
+	 private String name;
+	 private int salary;
+	 
+	public StreamFilterHelper(int id, String name, int salary) {   //using the constructor using fields to set the values
+		
+		this.id = id;
+		this.name = name;
+		this.salary = salary;
+	}
+
+	//using getter and setter methods to set and get the values provided for id name and salary
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getSalary() {
+		return salary;
+	}
+
+	public void setSalary(int salary) {
+		this.salary = salary;
+	}
+
+	//using toString() method to print the data in readable form
+	@Override
+	public String toString() {
+		return "StreamFilterHelper [id=" + id + ", name=" + name + ", salary=" + salary + "]";
+	}
+
+}
+
+public class StreamFilter {
+  
+	   public static void main(String[] args) {
+		
+		   List<StreamFilterHelper> list = new ArrayList<StreamFilterHelper>();  //creating the list to store the object of StreamsProgramHelper class
+
+		   //adding the data by creating the object of the StreamsProgramHelper class and adding them 
+		   //in to the generic type list;
+	   list.add(new StreamFilterHelper(101,"Ashu", 80000));
+	   list.add(new StreamFilterHelper(102,"Ranjan", 10000));
+	   list.add(new StreamFilterHelper(103,"Aman", 90000));
+	   list.add(new StreamFilterHelper(104,"Subhash", 70000));
+	   list.add(new StreamFilterHelper(106,"Shivangi", 40000));
+	   
+	   //Using the filter fucntionality  of the stream to print required data from the list ;
+	   //filtering on the basis of salary and also on the basis of the id's also;
+	   list.stream().filter(p->p.getSalary()<90000).filter(m->m.getId()>102).forEach(n->System.out.println(n));
+	  
+	}
+}
+
+//Output
+
+StreamFilterHelper [id=104, name=Subhash, salary=70000]
+StreamFilterHelper [id=106, name=Shivangi, salary=40000]
+
+******************************************************************************************************
+
+3.7 ForEach Program
+
+//Program
+
+package com.godigit.JavaFeatures;
+
+import java.util.ArrayList;   //imported the required packages
+import java.util.List;  //imported the required packages
+
+public class ForEachImplement {
+
+	public static void main(String[] args) {
+		
+	
+	List<String> list = new ArrayList<String>();   //declaring the list of string to store string type data;
+	
+	//adding the data in the list by .add() method;
+    list.add("Enginner");
+    list.add("Doctor");
+    list.add("CareTaker");
+    list.add("Lawyer");
+    list.add("Teacher");
+    list.add("Businessman");
+    list.add("Driver");
+    
+    System.out.println("The Profession are as follows : ");
+    
+    list.forEach(profession->System.out.println(profession));   //implementing the forEach loop to print the data;
+    
+    
+	}
+}
+
+//Output
+The Profession are as follows : 
+Enginner
+Doctor
+CareTaker
+Lawyer
+Teacher
+Businessman
+Driver
+
+******************************************************************************************
+3.8 Collectors class with example
+
+//Program 
+
+package com.godigit.JavaFeatures;
+
+public class Hostel {
+        //declaring the fields
+
+	 private String  name;
+	 private int hostel_id;
+	 private String hostel_address;
+
+      //constructor to set the values;
+
+	public Hostel(String name, int hostel_id, String hostel_address) {
+		super();
+		this.name = name;
+		this.hostel_id = hostel_id;
+		this.hostel_address = hostel_address;
+	}
+      
+//Getter and Seter Methods
+
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public int getHostel_id() {
+		return hostel_id;
+	}
+	public void setHostel_id(int hostel_id) {
+		this.hostel_id = hostel_id;
+	}
+	public String getHostel_address() {
+		return hostel_address;
+	}
+	public void setHostel_address(String hostel_address) {
+		this.hostel_address = hostel_address;
+	} 
+}
+
+package com.godigit.JavaFeatures;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class CollectorProgram {
+	
+	public static void main(String[] args) {
+		
+		List<Hostel> list = new ArrayList<Hostel>();   //declaring the genric type List
+	
+		//Adding the entities
+		
+		list.add(new Hostel("Sujan",  11, "Setor 17"));
+		list.add(new Hostel("Aman",  12, "Lamba Street"));
+		list.add(new Hostel("Atif",  13, "Greater Noida"));
+		list.add(new Hostel("Malik", 14, "Indore"));
+		list.add(new Hostel("Anuj",  15, "Uttar Pradesh"));
+		
+		//fetching the hostel_id and collecting them as a list
+		//Here the receving list should be of type integer as we are fetching the ids
+		
+		List<Integer> hoestelList = list.stream().map(m->m.getHostel_id()).collect(Collectors.toList());
+		
+		System.out.println("Hostel ids are "+ hoestelList);    //Printing out the list;
+		
+	}
+}
+
+//Output
+
+Hostel ids are [11, 12, 13, 14, 15]
+
+
+**************************************************************************************************************
+
+3.9 StringJoiner class with example
+
+//Program
+
+
+import java.util.StringJoiner;
+
+public class StringJoinerProgram {
+
+	
+	public static void main(String[] args) {
+		 
+	  //using comma as seperator and prefix and suffix  
+	StringJoiner joinSalary = new StringJoiner(",", "[", "]");
+
+	//addign the salaries
+
+      joinSalary.add("34000");
+      joinSalary.add("40000");
+      joinSalary.add("20000");
+      joinSalary.add("29000");
+      joinSalary.add("78000");
+      
+      System.out.println(joinSalary);
+      
+      
+	}
+}
+
+//output
+[34000,40000,20000,29000,78000]
+
+********************************************************************************
+
+3.10  Optional class with example
+
+//program
+
+package com.godigit.JavaFeatures;
+
+import java.util.Optional;
+
+//basically optional class is used to check that if the object is present or not at some location
+public class OptionalClassProgram {
+
+	public static void main(String[] args) {
+		
+		String[] names = new String [5];
+		
+		//setting the values in the string at some indexes;
+		names[2]= "Ajhar";
+		names[0] ="Aman";
+		names[1] = "Tahir";
+		names[4]="Shivam";
+		
+		//Now checking the the valeus presence at some index;
+		
+		Optional<String> Findpresence =Optional.ofNullable(names[3]);
+		
+		Optional<String> Findpresence1 =Optional.ofNullable(names[2]);  
+		
+		if(Findpresence.isPresent()) {    //checks if the values is there or not;
+			
+			System.out.print("The value at the index 3 is found");
+		}
+		else {
+			System.out.println("The value is not found at index 3");
+		}
+		
+	if(Findpresence1.isPresent()) {   //checks if the values is there or not;
+			
+			System.out.print("The value at the index 2 is found");
+		}
+		else {
+			System.out.println("The value is not found at index 3");
+		}
+		
+	}
+}
+
+
+//Output
+
+The value is not found at index 3
+The value at the index 2 is found
+
+
+
+**********************************END************************************************************
+
+
+
+
+
+
+
+
+
+
+
+
